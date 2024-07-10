@@ -44,7 +44,9 @@ class DatabaseController extends Controller
 
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            return response()->json(['message' => "Base {$request->database} encontrada!"], 200);
+
+//            throw new ProcessFailedException($process);
         }
 
         if ($process->getOutput()) {
