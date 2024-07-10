@@ -65,15 +65,15 @@ class DatabaseController extends Controller
             $process->run();
 
             if (!$process->isSuccessful()) {
-                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+                return response()->json(['message' => "Não foi possível recriar {$baseDev}!"], 404);
             }
 
             // Realiza o sincronismo
-            $process = Process::fromShellCommandline("sudo -u postgres pg_dump {$request->database} | psql {$baseDev}\"");
+            $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v -d {$request->database} | psql {$baseDev}\"");
             $process->run();
 
             if (!$process->isSuccessful()) {
-                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+                return response()->json(['message' => "Não foi possível sincronizar {$baseDev}!"], 404);
             }
         }
 
