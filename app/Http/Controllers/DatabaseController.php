@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 
 class DatabaseController extends Controller
 {
-    public function index(): array
+    public function index(): JsonResponse
     {
         $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | egrep -v 'List|Name|--|\||\('");
         $process->run();
@@ -28,7 +28,7 @@ class DatabaseController extends Controller
             }
         }
 
-        return $arr_database;
+        return response()->json(['databases' => $arr_database], 200);
     }
 
     public function sync(DatabaseRequest $request): JsonResponse
