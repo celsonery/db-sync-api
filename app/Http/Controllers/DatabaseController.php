@@ -9,6 +9,8 @@ use Symfony\Component\Process\Process;
 
 class DatabaseController extends Controller
 {
+    protected $arr_database = [];
+
     public function index(): JsonResponse
     {
         $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | egrep -v 'List|Name|--|\||\(|dev|hml'");
@@ -20,19 +22,34 @@ class DatabaseController extends Controller
         }
 
         $total = preg_split('/\n/',$process->getOutput());
-        $arr_database = [];
 
         foreach($total as $p) {
             if (strlen($p)) {
-                $arr_database[] = $p;
+                $this->arr_database[] = $p;
             }
         }
 
-        return response()->json(['databases' => $arr_database], 200);
+        return response()->json(['databases' => $this->arr_database], 200);
     }
 
     public function sync(DatabaseRequest $request): JsonResponse
     {
+        if (!$request->validated()) {
+            return response()->json(['message' => 'Erro: parametro enviado é inváido!'], 404);
+        }
+
+        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$request->database} . _dev");
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        if ($process->getOutput()) {
+            return response()->json(['message' => "Base {$request->database} encontrada!"], 200);
+        }
+
         return response()->json(['message' => "Base {$request->database} sincronizada com sucesso!"], 200);
     }
 }
