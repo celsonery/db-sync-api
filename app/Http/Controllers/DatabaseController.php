@@ -46,9 +46,9 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $this->createDatabase($this->baseDev);
+            return $this->createDatabase($this->baseDev);
         } else {
-            $this->dropDatabase($this->baseDev);
+            return $this->dropDatabase($this->baseDev);
         }
     }
 
