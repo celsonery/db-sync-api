@@ -23,9 +23,9 @@ class DatabaseController extends Controller
             throw new ProcessFailedException($process);
         }
 
-        $total = preg_split('/\n/',$process->getOutput());
+        $total = preg_split('/\n/', $process->getOutput());
 
-        foreach($total as $p) {
+        foreach ($total as $p) {
             if (strlen($p)) {
                 $this->databases[] = $p;
             }
@@ -34,26 +34,38 @@ class DatabaseController extends Controller
         return response()->json(['databases' => $this->databases], 200);
     }
 
-    public function verify(DatabaseRequest $request)
+    public function verify(DatabaseRequest $request): void
     {
-        if (!$request->validated()) {
-            return response()->json(['message' => 'Erro: parametro enviado é inváido!'], 404);
-        }
-
         $this->baseDev = $request->database . '_dev';
 
         $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$this->baseDev}");
         $process->run();
 
         if (!$process->isSuccessful()) {
-            return $this->createDatabase($this->baseDev);
+            $this->sinc($this->baseProd, $this->baseDev, false);
         } else {
-            return $this->dropDatabase($this->baseDev);
+            $this->sinc($this->baseProd, $this->baseDev, true);
         }
     }
 
-    private function sinc($baseProd, $baseDev): JsonResponse
+    private function sinc($baseProd, $baseDev, bool $drop): JsonResponse
     {
+        if ($drop) {
+            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with (force)\"");
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                return response()->json(['message' => "Não foi possível deletar {$baseDev}!"], 404);
+            }
+        } else {
+            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+            }
+        }
+
         // Realiza o sincronismo
         $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v -d {$baseProd} | psql {$baseDev}\"");
         $process->run();
@@ -65,27 +77,27 @@ class DatabaseController extends Controller
         return response()->json(['message' => "Base {$baseDev} sincronizada com sucesso!"], 200);
     }
 
-    private function createDatabase($baseDev)
-    {
-        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
-        $process->run();
+//    private function createDatabase($baseDev)
+//    {
+//        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
+//        $process->run();
+//
+//        if (!$process->isSuccessful()) {
+//            return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+//        }
+//
+//        $this->sinc($this->baseProd, $this->baseDev);
+//    }
 
-        if (!$process->isSuccessful()) {
-            return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
-        }
-
-        $this->sinc($this->baseProd, $this->baseDev);
-    }
-
-    private function dropDatabase($baseDev)
-    {
-        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with \(force\)\"");
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            return response()->json(['message' => "Não foi possível deletar {$baseDev}!"], 404);
-        }
-
-        $this->sinc($this->baseProd, $this->baseDev);
-    }
+//    private function dropDatabase($baseDev)
+//    {
+//        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with \(force\)\"");
+//        $process->run();
+//
+//        if (!$process->isSuccessful()) {
+//            return response()->json(['message' => "Não foi possível deletar {$baseDev}!"], 404);
+//        }
+//
+//        $this->sinc($this->baseProd, $this->baseDev);
+//    }
 }
