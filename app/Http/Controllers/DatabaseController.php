@@ -69,7 +69,7 @@ class DatabaseController extends Controller
 
         // Realiza o sincronismo
 
-        $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v -d {$this->baseProd} | psql {$this->baseDev}\"");
+        $process = Process::fromShellCommandline("sudo -u postgres pg_dump {$this->baseProd} | psql {$this->baseDev}\"");
         $process->run();
 
         if (!$process->isSuccessful()) {
