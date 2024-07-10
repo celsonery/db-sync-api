@@ -10,6 +10,7 @@ use Symfony\Component\Process\Process;
 class DatabaseController extends Controller
 {
     protected array $databases = [];
+    protected string $baseProd, $baseDev;
 
     public function index(): JsonResponse
     {
@@ -38,37 +39,20 @@ class DatabaseController extends Controller
             return response()->json(['message' => 'Erro: parametro enviado é inváido!'], 404);
         }
 
-        $baseDev = $request->database . '_dev';
+        $this->baseDev = $request->database . '_dev';
 
-        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$baseDev}");
+        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$this->baseDev}");
         $process->run();
 
-        return $process->isSuccessful();
-
-//        if (!$process->isSuccessful()) {
-//            // Base não encontrada - cria base dev
-//
-//        } else {
-//            $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$baseDev}");
-//            $process->run();
-//
-//            return response()->json(['message' => "Base {$request->database} sincronizada com sucesso!"], 200);
-//        }
-
-//        if ($process->getOutput()) {
-//            return response()->json(['message' => "Base {$request->database} sincronizada com sucesso!"], 200);
-//        }
+        if (!$process->isSuccessful()) {
+            $this->createDatabase($this->baseDev);
+        } else {
+            $this->dropDatabase($this->baseDev);
+        }
     }
 
     private function sinc($baseProd, $baseDev): JsonResponse
     {
-        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            return response()->json(['message' => "Não foi possível recriar {$baseDev}!"], 404);
-        }
-
         // Realiza o sincronismo
         $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v -d {$baseProd} | psql {$baseDev}\"");
         $process->run();
@@ -86,17 +70,23 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-//            return response()->json(['message' => "Não foi possível sincronizar {$baseDev}!"], 404);
+            response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+            return;
         }
+
+        $this->sinc($this->baseProd, $this->baseDev);
     }
 
     private function dropDatabase($baseDev): void
     {
-        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
+        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with (force)\"");
         $process->run();
 
         if (!$process->isSuccessful()) {
-//            return response()->json(['message' => "Não foi possível sincronizar {$baseDev}!"], 404);
+            response()->json(['message' => "Não foi possível deletar {$baseDev}!"], 404);
+            return;
         }
+
+        $this->sinc($this->baseProd, $this->baseDev);
     }
 }
