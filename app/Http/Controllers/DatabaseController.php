@@ -79,7 +79,7 @@ class DatabaseController extends Controller
 
     private function dropDatabase($baseDev)
     {
-        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with (force)\"");
+        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with \(force\)\"");
         $process->run();
 
         if (!$process->isSuccessful()) {
