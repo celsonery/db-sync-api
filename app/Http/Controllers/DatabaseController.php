@@ -10,7 +10,8 @@ use Symfony\Component\Process\Process;
 class DatabaseController extends Controller
 {
     protected array $databases = [];
-    protected string $baseProd, $baseDev;
+    protected string $baseProd = '';
+    protected string $baseDev = '';
 
     public function index(): JsonResponse
     {
