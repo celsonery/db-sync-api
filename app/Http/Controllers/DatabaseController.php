@@ -34,7 +34,7 @@ class DatabaseController extends Controller
         return response()->json(['databases' => $this->databases], 200);
     }
 
-    public function verify(DatabaseRequest $request): void
+    public function verify(DatabaseRequest $request): JsonResponse
     {
         $this->baseDev = $request->database . '_dev';
 
@@ -42,9 +42,9 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $this->sinc(false);
+            return $this->sinc(false);
         } else {
-            $this->sinc( true);
+            return $this->sinc( true);
         }
     }
 
