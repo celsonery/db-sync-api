@@ -38,7 +38,8 @@ class DatabaseController extends Controller
             return response()->json(['message' => 'Erro: parametro enviado é inváido!'], 404);
         }
 
-        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$request->database} . _dev");
+        $baseDev = $request->database . '_dev';
+        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$baseDev}");
         $process->run();
 
         // executes after the command finishes
