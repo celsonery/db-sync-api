@@ -43,7 +43,7 @@ class DatabaseController extends Controller
         $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$baseDev}");
         $process->run();
 
-        return gettype($process->isSuccessful());
+        return $process->isSuccessful();
 
 //        if (!$process->isSuccessful()) {
 //            // Base não encontrada - cria base dev
