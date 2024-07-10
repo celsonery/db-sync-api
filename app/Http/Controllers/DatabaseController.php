@@ -42,39 +42,41 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $this->sinc($this->baseProd, $this->baseDev, false);
+            $this->sinc(false);
         } else {
-            $this->sinc($this->baseProd, $this->baseDev, true);
+            $this->sinc( true);
         }
     }
 
-    private function sinc($baseProd, $baseDev, bool $drop): JsonResponse
+    private function sinc(bool $drop): JsonResponse
     {
         if ($drop) {
-            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with (force)\"");
+            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$this->baseDev} with (force)\"");
             $process->run();
 
             if (!$process->isSuccessful()) {
-                return response()->json(['message' => "Não foi possível deletar {$baseDev}!"], 404);
-            }
-        } else {
-            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
-            $process->run();
-
-            if (!$process->isSuccessful()) {
-                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+                return response()->json(['message' => "Não foi possível deletar {$this->baseDev}!"], 404);
             }
         }
 
-        // Realiza o sincronismo
-        $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v -d {$baseProd} | psql {$baseDev}\"");
+        // Recria base de dados
+        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$this->baseDev}\"");
         $process->run();
 
         if (!$process->isSuccessful()) {
-            return response()->json(['message' => "Não foi possível sincronizar {$baseDev}!"], 404);
+            return response()->json(['message' => "Não foi possível criar {$this->baseDev}!"], 404);
         }
 
-        return response()->json(['message' => "Base {$baseDev} sincronizada com sucesso!"], 200);
+        // Realiza o sincronismo
+
+        $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v -d {$this->baseProd} | psql {$this->baseDev}\"");
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return response()->json(['message' => "Não foi possível sincronizar {$this->baseDev}!"], 404);
+        }
+
+        return response()->json(['message' => "Base {$this->baseDev} sincronizada com sucesso!"], 200);
     }
 
 //    private function createDatabase($baseDev)
