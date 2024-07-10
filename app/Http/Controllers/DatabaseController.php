@@ -11,7 +11,7 @@ class DatabaseController extends Controller
 {
     public function index(): JsonResponse
     {
-        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | egrep -v 'List|Name|--|\||\('");
+        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | egrep -v 'List|Name|--|\||\(|dev|hml'");
         $process->run();
 
         // executes after the command finishes
