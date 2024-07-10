@@ -44,8 +44,32 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            // cria base dev
+            // Base não encontrada - cria base dev
             $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+            }
+        } else {
+            // Base encontrada - apaga
+            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev}\"");
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                return response()->json(['message' => "Não foi possível apagar {$baseDev}!"], 404);
+            }
+
+            // Recria base apagada
+            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+            }
+
+            // Realiza o sincronismo
+            $process = Process::fromShellCommandline("sudo -u postgres pg_dump {$request->database} | psql {$baseDev}\"");
             $process->run();
 
             if (!$process->isSuccessful()) {
@@ -53,9 +77,9 @@ class DatabaseController extends Controller
             }
         }
 
-        if ($process->getOutput()) {
-            return response()->json(['message' => "Base {$request->database} encontrada!"], 200);
-        }
+//        if ($process->getOutput()) {
+//            return response()->json(['message' => "Base {$request->database} sincronizada com sucesso!"], 200);
+//        }
 
         return response()->json(['message' => "Base {$request->database} sincronizada com sucesso!"], 200);
     }
