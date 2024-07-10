@@ -73,33 +73,9 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            return response()->json(['message' => "Não foi possível sincronizar {$this->baseDev}!"], 404);
+            return response()->json(['message' => "Não foi possível sincronizar {$this->baseDev}! - {$process->getErrorOutput()}"], 404);
         }
 
         return response()->json(['message' => "Base {$this->baseDev} sincronizada com sucesso!"], 200);
     }
-
-//    private function createDatabase($baseDev)
-//    {
-//        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
-//        $process->run();
-//
-//        if (!$process->isSuccessful()) {
-//            return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
-//        }
-//
-//        $this->sinc($this->baseProd, $this->baseDev);
-//    }
-
-//    private function dropDatabase($baseDev)
-//    {
-//        $process = Process::fromShellCommandline("sudo -u postgres psql -c \"DROP DATABASE {$baseDev} with \(force\)\"");
-//        $process->run();
-//
-//        if (!$process->isSuccessful()) {
-//            return response()->json(['message' => "Não foi possível deletar {$baseDev}!"], 404);
-//        }
-//
-//        $this->sinc($this->baseProd, $this->baseDev);
-//    }
 }
