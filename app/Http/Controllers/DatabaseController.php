@@ -39,14 +39,18 @@ class DatabaseController extends Controller
         }
 
         $baseDev = $request->database . '_dev';
+
         $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | grep {$baseDev}");
         $process->run();
 
-        // executes after the command finishes
         if (!$process->isSuccessful()) {
-            return response()->json(['message' => "Base {$request->database} encontrada!"], 200);
+            // cria base dev
+            $process = Process::fromShellCommandline("sudo -u postgres psql -c \"CREATE DATABASE {$baseDev}\"");
+            $process->run();
 
-//            throw new ProcessFailedException($process);
+            if (!$process->isSuccessful()) {
+                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+            }
         }
 
         if ($process->getOutput()) {
