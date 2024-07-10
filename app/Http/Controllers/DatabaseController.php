@@ -44,7 +44,7 @@ class DatabaseController extends Controller
         if (!$process->isSuccessful()) {
             return $this->sinc(false);
         } else {
-            return $this->sinc( true);
+            return $this->sinc(true);
         }
     }
 
@@ -68,8 +68,7 @@ class DatabaseController extends Controller
         }
 
         // Realiza o sincronismo
-
-        $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v {$this->baseProd} | sudo -u postgres psql {$this->baseDev}\"");
+        $process = Process::fromShellCommandline("sudo -u postgres pg_dump -v {$this->baseProd} | sudo -u postgres psql {$this->baseDev}");
         $process->run();
 
         if (!$process->isSuccessful()) {
