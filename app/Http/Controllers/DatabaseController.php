@@ -9,9 +9,9 @@ use Symfony\Component\Process\Process;
 
 class DatabaseController extends Controller
 {
-    public function index(): string
+    public function index(): array
     {
-        $process = Process::fromShellCommandline("sudo -u evelyn whoami | base64"); //postgres psql -l | egrep -v List|Name|--|CTc|rows|template?|_dev|__|_hml|-hml' | awk '{print $1}' | grep -v '|'");
+        $process = Process::fromShellCommandline("sudo -u postgres psql -l | awk '{print $1}' | egrep -v 'List|Name|--|\||\('");
         $process->run();
 
         // executes after the command finishes
@@ -19,7 +19,16 @@ class DatabaseController extends Controller
             throw new ProcessFailedException($process);
         }
 
-        return $process->getOutput();
+        $total = preg_split('/\n/',$process->getOutput());
+        $arr_database = [];
+
+        foreach($total as $p) {
+            if (strlen($p)) {
+                $arr_database[] = $p;
+            }
+        }
+
+        return $arr_database;
     }
 
     public function sync(DatabaseRequest $request): JsonResponse
