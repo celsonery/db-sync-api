@@ -49,7 +49,7 @@ class DatabaseController extends Controller
             $process->run();
 
             if (!$process->isSuccessful()) {
-                return response()->json(['message' => "Não foi possível criar {$baseDev}!"], 404);
+                return response()->json(['message' => "1 - Não foi possível criar {$baseDev}!"], 404);
             }
         } else {
             // Base encontrada - apaga
