@@ -11,12 +11,10 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
         Route::post('/user', [AuthController::class, 'user'])->name('auth.user');
-    });
-});
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/databases', [DatabaseController::class, 'index'])->name('database.index');
-    Route::post('/databases', [DatabaseController::class, 'verify'])->name('database.verify');
+        Route::get('/databases', [DatabaseController::class, 'index'])->name('database.index');
+        Route::post('/databases', [DatabaseController::class, 'sync'])->name('database.sync');
+    });
 });
 
 Route::get('/', function () {

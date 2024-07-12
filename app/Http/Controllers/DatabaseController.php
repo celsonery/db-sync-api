@@ -42,7 +42,7 @@ class DatabaseController extends Controller
         return response()->json(['databases' => $this->databases], 200);
     }
 
-    public function verify(DatabaseRequest $request): JsonResponse
+    public function sync(DatabaseRequest $request): JsonResponse
     {
         $this->baseProd = $request->database;
         $this->baseDev = $request->database . '_dev';
@@ -53,13 +53,13 @@ class DatabaseController extends Controller
         $process->run();
 
         if (!$process->isSuccessful()) {
-            return $this->sinc(false);
+            return $this->execute(false);
         } else {
-            return $this->sinc(true);
+            return $this->execute(true);
         }
     }
 
-    private function sinc(bool $drop): JsonResponse
+    private function execute(bool $drop): JsonResponse
     {
         if ($drop) {
             Log::debug("Banco {$this->baseDev} já existe removendo...");
