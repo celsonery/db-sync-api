@@ -4,6 +4,10 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DatabaseController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return response()->json(['message' => "Api funcionando ok"], 200);
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
@@ -14,9 +18,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::get('/', function () {
-    return response()->json(['message' => "Api funcionando ok"], 200);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/databases', [DatabaseController::class, 'index'])->name('database.index');
+    Route::post('/databases', [DatabaseController::class, 'sync'])->name('database.sync');
 });
-
-Route::get('/databases', [DatabaseController::class, 'index'])->name('database.index');
-Route::post('/databases', [DatabaseController::class, 'sync'])->name('database.sync');
