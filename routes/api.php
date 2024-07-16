@@ -11,12 +11,12 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
         Route::post('/user', [AuthController::class, 'user'])->name('auth.user');
-
-        Route::get('/databases', [DatabaseController::class, 'index'])->name('database.index');
-        Route::post('/databases', [DatabaseController::class, 'sync'])->name('database.sync');
     });
 });
 
 Route::get('/', function () {
     return response()->json(['message' => "Api funcionando ok"], 200);
 });
+
+Route::get('/databases', [DatabaseController::class, 'index'])->name('database.index');
+Route::post('/databases', [DatabaseController::class, 'sync'])->name('database.sync');
