@@ -4,7 +4,7 @@
 [![Latest Version](https://img.shields.io/github/release/celsonery/db-sync-api.svg?style=flat-square)](https://github.com/celsonery/db-sync-api/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build](https://img.shields.io/scrutinizer/build/g/celsonery/db-sync-api.svg?style=flat-square)](https://scrutinizer-ci.com/g/celsonery/db-sync-api)
-[![Quality Score](https://img.shields.io/scrutinizer/g/celsonery/db-sync-api.svg?style=flat-square)](https://scrutinizer-ci.com/g/celsonery/db-sync-api)
+[![Quality Score](https://img.shields.io/scrutinizer/g/celsonery/db-sync-api.svg?style=flat-square)](https://scrutinizer-ci.com/g/celsonery/db-sync-api/build-status/main)
 
 ## Installation
 
