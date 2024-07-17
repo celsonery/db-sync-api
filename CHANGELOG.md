@@ -4,6 +4,11 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.0.1](https://github.com/celsonery/db-sync-api/compare/v1.0.0...v1.0.1) (2024-07-17)
+
+
+---
+
 ## [0.0.1](https://github.com/celsonery/db-sync-api/compare/0.0.0...v0.0.1) (2024-07-17)
 
 
