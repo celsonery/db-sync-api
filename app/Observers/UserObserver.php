@@ -16,6 +16,7 @@ class UserObserver
     public function creating(User $user)
     {
         $user['password'] = Hash::make($user['password']);
+        $user['role_id'] = 2;
     }
 
     /**
@@ -32,7 +33,7 @@ class UserObserver
     /**
      * Handle the User "deleted" event.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User  $username
      * @return void
      */
     public function deleted(User $user)

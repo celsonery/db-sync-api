@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LogoutUserTest extends TestCase
@@ -20,7 +20,9 @@ class LogoutUserTest extends TestCase
 
     public function test_logout_user_logged_ok()
     {
-        $user = User::factory()->create([
+        Role::factory()->count(2)->create();
+
+        User::factory()->create([
             'name' => 'Celso Nery',
             'email' => 'celso@karyon.com.br'
         ]);

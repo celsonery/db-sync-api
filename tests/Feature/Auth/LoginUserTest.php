@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LoginUserTest extends TestCase
@@ -57,7 +57,9 @@ class LoginUserTest extends TestCase
 
     public function test_with_correct_data()
     {
-        $user = User::factory()->create([
+        Role::factory()->count(2)->create();
+
+        User::factory()->create([
             'email' => 'celso@karyon.com.br'
         ]);
 
