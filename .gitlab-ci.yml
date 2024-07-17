@@ -55,88 +55,88 @@ stages:
     - trivy --scanners vuln,misconfig,secret --severity MEDIUM,HIGH,CRITICAL fs .
   allow_failure: false
 
-#build:
-#  stage: build
-#  only:
-#    - main
-#  image: php:8.3.9-cli-alpine3.20
-#  before_script:
-#    - apk update && apk upgrade --no-cache
-#    - apk add curl zip unzip vim lynx git --no-cache
-#    - docker-php-ext-install bcmath opcache pcntl
-#    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
-#    - composer update --no-dev
-#  script:
-#    - cp .env.example .env
-#    - php artisan key:generate
+build:
+  stage: build
+  only:
+    - main
+  image: php:8.3.9-cli-alpine3.20
+  before_script:
+    - apk update && apk upgrade --no-cache
+    - apk add curl zip unzip vim lynx git --no-cache
+    - docker-php-ext-install bcmath opcache pcntl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+    - composer update --no-dev
+  script:
+    - cp .env.example .env
+    - php artisan key:generate
 
-#1-image_build:
-#  image: docker:25.0.3-alpine3.19
-#  stage: image
-#  only:
-#    - main
-#  services:
-#    - docker:25.0.3-dind-alpine3.19
-#  script:
-#    - docker build -f docker/dockerfile -t $CI_REGISTRY/$CI_PROJECT_PATH:$VER .
-#  allow_failure: false
-#
-#3-image_push:
-#  image: docker:25.0.3-alpine3.19
-#  stage: image
-#  only:
-#    - main
-#  dependencies:
-#    - 1-image_build
-#  services:
-#    - docker:25.0.3-dind-alpine3.19
-#  before_script:
-#    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASS
-#  script:
-#    - docker image tag $CI_REGISTRY/$CI_PROJECT_PATH:$VER $CI_REGISTRY/$CI_PROJECT_PATH:latest
-#    - docker push $CI_REGISTRY/$CI_PROJECT_PATH:$VER
-#    - docker push $CI_REGISTRY/$CI_PROJECT_PATH:latest
-#  allow_failure: false
-#
-#deploy_prod:
-#  stage: deploy-prod
-#  when: manual
-#  only:
-#    - main
-#  image:
-#    name: $CI_REGISTRY/celsonery/kubectl
-#  before_script:
-#    - echo $KUBE_CREDENTIALS | base64 -d > kubeconfig
-#    - export KUBECONFIG=kubeconfig
-#  script:
-#    - kubectl set image -n bagarote-prod deployments/laravel-redis laravel-redis=$CI_REGISTRY/$CI_PROJECT_PATH:$VER
-#
-#rollback_prod:
-#  stage: deploy-prod
-#  when: manual
-#  only:
-#    - main
-#  image:
-#    name: $CI_REGISTRY/celsonery/kubectl
-#  before_script:
-#    - echo $KUBE_CREDENTIALS | base64 -d > kubeconfig
-#    - export KUBECONFIG=kubeconfig
-#  script:
-#    - kubectl rollout undo -n bagarote-prod deployments/laravel-redis
-#
-#image_clean:
-#  image: docker:25.0.3-alpine3.19
-#  stage: image
-#  only:
-#    - main
-#  services:
-#    - docker:25.0.3-dind-alpine3.19
-#  before_script:
-#    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASS
-#  script:
-#    - echo "Limpando imagens antigas e mantenas apenas develop|homolog|latest"
-#    - for i in $(printf "%s\n" `docker image ls | grep $CI_REGISTRY/$CI_PROJECT_PATH | awk '{print $3}'` `docker image ls | grep $CI_REGISTRY/$CI_PROJECT_PATH | egrep "latest|develop|homolog" |  awk '{print $3}'` | sort | uniq -u);
-#      do
-#        docker rmi $i;
-#      done
-#  allow_failure: false
+1-image_build:
+  image: docker:25.0.3-alpine3.19
+  stage: image
+  only:
+    - main
+  services:
+    - docker:25.0.3-dind-alpine3.19
+  script:
+    - docker build -f docker/dockerfile -t $CI_REGISTRY/$CI_PROJECT_PATH:$VER .
+  allow_failure: false
+
+3-image_push:
+  image: docker:25.0.3-alpine3.19
+  stage: image
+  only:
+    - main
+  dependencies:
+    - 1-image_build
+  services:
+    - docker:25.0.3-dind-alpine3.19
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASS
+  script:
+    - docker image tag $CI_REGISTRY/$CI_PROJECT_PATH:$VER $CI_REGISTRY/$CI_PROJECT_PATH:latest
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH:$VER
+    - docker push $CI_REGISTRY/$CI_PROJECT_PATH:latest
+  allow_failure: false
+
+deploy_prod:
+  stage: deploy-prod
+  when: manual
+  only:
+    - main
+  image:
+    name: $CI_REGISTRY/celsonery/kubectl
+  before_script:
+    - echo $KUBE_CREDENTIALS | base64 -d > kubeconfig
+    - export KUBECONFIG=kubeconfig
+  script:
+    - kubectl set image -n bagarote-prod deployments/db-sync-api db-sync-api=$CI_REGISTRY/$CI_PROJECT_PATH:$VER
+
+rollback_prod:
+  stage: deploy-prod
+  when: manual
+  only:
+    - main
+  image:
+    name: $CI_REGISTRY/celsonery/kubectl
+  before_script:
+    - echo $KUBE_CREDENTIALS | base64 -d > kubeconfig
+    - export KUBECONFIG=kubeconfig
+  script:
+    - kubectl rollout undo -n bagarote-prod deployments/db-sync-api
+
+image_clean:
+  image: docker:25.0.3-alpine3.19
+  stage: image
+  only:
+    - main
+  services:
+    - docker:25.0.3-dind-alpine3.19
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASS
+  script:
+    - echo "Limpando imagens antigas e mantenas apenas develop|homolog|latest"
+    - for i in $(printf "%s\n" `docker image ls | grep $CI_REGISTRY/$CI_PROJECT_PATH | awk '{print $3}'` `docker image ls | grep $CI_REGISTRY/$CI_PROJECT_PATH | egrep "latest|develop|homolog" |  awk '{print $3}'` | sort | uniq -u);
+      do
+        docker rmi $i;
+      done
+  allow_failure: false
