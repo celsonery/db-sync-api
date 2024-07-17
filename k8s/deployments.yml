@@ -20,17 +20,6 @@ spec:
       - name: db-sync-api
         image: registry.bagarote.dev.br/bagarote/db-sync-api:latest
         imagePullPolicy: IfNotPresent
-        env:
-        - name: DB_CONNECTION
-          valueFrom:
-            secretKeyRef:
-              name: secrets-nfce
-              key: db_connection
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: secrets-nfce
-              key: db_host
         securityContext:
           allowPrivilegeEscalation: false
         resources:
