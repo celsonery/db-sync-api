@@ -4,6 +4,13 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Celso Nery",
+            "email": "celso.nery@gmail.com",
+            "role": "Maintainer"
+        }
+    ],
     "require": {
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
@@ -45,7 +52,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "tests": "@php artisan test"
     },
     "extra": {
         "laravel": {
