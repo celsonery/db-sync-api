@@ -23,7 +23,7 @@ stages:
   script:
     - cp .env.example .env
     - php artisan key:generate
-    - php artisan tests
+    - php artisan test
 
 2-sonar:
   stage: tests
