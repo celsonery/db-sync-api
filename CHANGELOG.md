@@ -4,18 +4,6 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
-## [1.0.1](https://github.com/celsonery/db-sync-api/compare/v1.0.0...v1.0.1) (2024-07-17)
-
-
----
-
-## [0.0.1](https://github.com/celsonery/db-sync-api/compare/0.0.0...v0.0.1) (2024-07-17)
-
-
----
-
----
-
 ## [1.0.0](https://github.com/celsonery/db-sync-api/compare/2daac395d4f1809379b952e2e138e12b4347cf4b...v1.0.0) (2024-07-17)
 
 ### Features
@@ -26,6 +14,7 @@ All notable changes to this project will be documented in this file.
 * Adiciona docker, k8s e .dockerignore ([f2ff99](https://github.com/celsonery/db-sync-api/commit/f2ff992e3f8a183483d1acc45ee092e0281a64b0))
 * Adiciona Github-Action ([0a10a5](https://github.com/celsonery/db-sync-api/commit/0a10a5e98ee4b70fb292e66d8ffe486c1f4bd0a7))
 * Adiciona gitlab-ci ([354af2](https://github.com/celsonery/db-sync-api/commit/354af22fc5c5e90e6109a9467cca6d9e3facba39))
+* Adiciona php-conventional-changelog ([eafc01](https://github.com/celsonery/db-sync-api/commit/eafc01c583fba5e3b7e2164413d978d574203a93))
 * Adiciona roles ([fba4e9](https://github.com/celsonery/db-sync-api/commit/fba4e93aae6aa265aedde102b47720e8495ed8dc))
 * Adiciona sistema de authenticação ([2dcd58](https://github.com/celsonery/db-sync-api/commit/2dcd58a862785e6a5a36251f1c434c567eddef28))
 * Adiciona sonarqube ([20de3b](https://github.com/celsonery/db-sync-api/commit/20de3b084ce6ed14c4c779feeb28b3d46ddff8a8))
