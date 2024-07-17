@@ -1,0 +1,19 @@
+FROM php:8.3.9-cli-alpine3.20
+
+RUN apk update && apk upgrade --no-cache
+RUN apk add curl zip unzip vim lynx git --no-cache
+RUN docker-php-ext-install bcmath pdo opcache pcntl
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /usr/local/bin/app
+COPY . ./
+COPY .env.example .env
+
+RUN composer update --no-dev
+
+RUN php artisan key:generate
+
+EXPOSE 8000
+
+CMD [ "php", "artisan", "serve", "--host=0.0.0.0", "--port=8000" ]
