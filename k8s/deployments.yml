@@ -51,7 +51,8 @@ metadata:
 spec:
   selector:
     app: db-sync-api
+  type: NodePort
   ports:
   - port: 8000
     targetPort: 8000
-  type: ClusterIP
+    nodePort: 32000
