@@ -109,8 +109,6 @@ class RegisterUserTest extends TestCase
 
     public function test_register_with_correct_data()
     {
-        Role::factory()->count(2)->create();
-
         $user = User::factory()->create([
             'name' => 'Celso Nery',
             'email' => 'celso@karyon.com.br'

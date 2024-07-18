@@ -16,7 +16,6 @@ class UserObserver
     public function creating(User $user)
     {
         $user['password'] = Hash::make($user['password']);
-        $user['role_id'] = 2;
     }
 
     /**

@@ -34,36 +34,36 @@ class LoginUserTest extends TestCase
 
     public function test_password_without_min_length()
     {
-        $response = $this->postJson('/api/auth/login', ['email' => 'celso@karyon.com.br', 'password' => '123']);
+        $user = User::factory()->create();
+
+        $response = $this->postJson('/api/auth/login', ['email' => $user->email, 'password' => '123']);
 
         $response->assertStatus(422);
     }
 
     public function test_password_without_max_length()
     {
+        $user = User::factory()->create();
         $passMax = str_repeat("A", 256);
 
-        $response = $this->postJson('/api/auth/login', ['email' => 'celso@karyon.com.br', 'password' => $passMax]);
+        $response = $this->postJson('/api/auth/login', ['email' => $user->email, 'password' => $passMax]);
 
         $response->assertStatus(422);
     }
 
     public function test_with_password_wrong()
     {
-        $response = $this->postJson('/api/auth/login', ['email' => 'celso@karyon.com.br', 'password' => '123456']);
+        $user = User::factory()->create();
+        $response = $this->postJson('/api/auth/login', ['email' => $user->email, 'password' => '123456']);
 
         $response->assertStatus(422);
     }
 
     public function test_with_correct_data()
     {
-        Role::factory()->count(2)->create();
+        $user = User::factory()->create();
 
-        User::factory()->create([
-            'email' => 'celso@karyon.com.br'
-        ]);
-
-        $response = $this->postJson('/api/auth/login', ['email' => 'celso@karyon.com.br', 'password' => 'password']);
+        $response = $this->postJson('/api/auth/login', ['email' => $user->email, 'password' => 'password']);
 
         $response->assertStatus(200);
     }

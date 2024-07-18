@@ -20,12 +20,9 @@ class GetUserTest extends TestCase
 
     public function test_return_user_logged_ok()
     {
-        Role::factory()->count(2)->create();
-
         User::factory()->create([
             'name' => 'Celso Nery',
-            'email' => 'celso@karyon.com.br',
-            'role_id' => 2
+            'email' => 'celso@karyon.com.br'
         ]);
 
         $userLogged = $this->postJson('/api/auth/login', [
