@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
