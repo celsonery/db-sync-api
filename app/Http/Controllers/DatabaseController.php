@@ -11,10 +11,10 @@ use Symfony\Component\Process\Process;
 class DatabaseController extends Controller
 {
     public function __construct(
-        private array $databases,
-        private string $baseProd,
-        private string $baseDev,
-        private string $pg_host
+        private array $databases = [],
+        private string $baseProd = '',
+        private string $baseDev = '',
+        private string $pg_host = ''
     )
     {
         $this->pg_host = env('PG_HOST');
