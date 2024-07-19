@@ -20,6 +20,57 @@ spec:
       - name: db-sync-api
         image: registry.bagarote.dev.br/bagarote/db-sync-api:latest
         imagePullPolicy: IfNotPresent
+        env:
+          - name: APP_ENV
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: app_env
+          - name: APP_KEY
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: app_key
+          - name: APP_DEBUG
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: app_debug
+          - name: DB_CONNECTION
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: db_connection
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: db_host
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: db_port
+          - name: DB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: db_database
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: db_username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: db_password
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secrets-db-sync
+                key: pg_password
         securityContext:
           allowPrivilegeEscalation: false
         resources:
