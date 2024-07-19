@@ -1,8 +1,11 @@
 FROM php:8.3.9-cli-alpine3.20
 
 RUN apk update && apk upgrade --no-cache
-RUN apk add curl zip unzip vim lynx git --no-cache
+RUN apk add curl zip unzip vim lynx git postgresql-client --no-cache
 RUN docker-php-ext-install bcmath pdo opcache pcntl
+
+RUN ln -s /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+COPY /php/extra.ini /usr/local/etc/php/conf.d/99_extra.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
