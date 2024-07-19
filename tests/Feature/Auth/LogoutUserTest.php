@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LogoutUserTest extends TestCase
@@ -18,15 +18,21 @@ class LogoutUserTest extends TestCase
         $response->assertStatus(401);
     }
 
+    public function test_do_not_logout_without_user_token()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->withHeaders(['Authentication' => 'Bearer '])->postJson('/api/auth/logout', []);
+
+        $response->assertStatus(401);
+    }
+
     public function test_logout_user_logged_ok()
     {
-        $user = User::factory()->create([
-            'name' => 'Celso Nery',
-            'email' => 'celso@karyon.com.br'
-        ]);
+        $user = User::factory()->create();
 
         $userLogged = $this->postJson('/api/auth/login', [
-            'email' => 'celso@karyon.com.br',
+            'email' => $user->email,
             'password' => 'password'
         ]);
 

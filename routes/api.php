@@ -9,10 +9,10 @@ Route::get('/', function () {
 });
 
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
         Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
         Route::post('/user', [AuthController::class, 'user'])->name('auth.user');
     });

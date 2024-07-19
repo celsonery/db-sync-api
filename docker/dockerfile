@@ -1,8 +1,50 @@
 FROM php:8.3.9-cli-alpine3.20
 
-RUN apk update && apk upgrade --no-cache
-RUN apk add curl zip unzip vim lynx git --no-cache
-RUN docker-php-ext-install bcmath pdo opcache pcntl
+# Update alpine image and install packeges
+RUN apk --update --no-cache add curl \
+    zip \
+    unzip \
+    vim \
+    libzip \
+    libzip-dev \
+    libpq-dev \
+    libpng-dev \
+    oniguruma-dev \
+    linux-headers \
+    git \
+    lynx \
+    postgresql-client
+
+# Install packages to run PHP/laravel and our app
+RUN apk --update --no-cache add php83-bcmath \
+    php83-bz2 \
+    php83-calendar \
+    php83-exif \
+    php83-fpm \
+    php83-gd \
+    php83-gettext \
+    php83-opcache \
+    php83-pcntl \
+    php83-zip \
+    php83-pgsql \
+    php83-redis \
+    php83-xdebug \
+    php83-sockets
+
+# Install extensions for PHP
+RUN docker-php-ext-install \
+    zip \
+    bcmath \
+    pdo \
+    pdo_pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    gd \
+    sockets
+
+RUN ln -s /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+COPY ./docker/php/extra.ini /usr/local/etc/php/conf.d/99_extra.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
