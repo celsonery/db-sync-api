@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -12,14 +13,32 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_without_data()
     {
-        $response = $this->postJson('/api/auth/register', []);
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', []);
 
         $response->assertStatus(422);
     }
 
     public function test_do_not_register_with_data_empty()
     {
-        $response = $this->postJson('/api/auth/register', [
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => '',
             'email' => '',
             'password' => '',
@@ -31,7 +50,16 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_with_name_without_min_length()
     {
-        $response = $this->postJson('/api/auth/register', [
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => 'ce',
             'email' => 'celso@karyon.com.br',
             'password' => 'password',
@@ -43,9 +71,18 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_with_name_without_max_length()
     {
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
         $nameMax = str_repeat("A", 256);
 
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => $nameMax,
             'email' => 'celso@karyon.com.br',
             'password' => 'password',
@@ -57,7 +94,16 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_with_email_invalid()
     {
-        $response = $this->postJson('/api/auth/register', [
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => 'celso',
             'email' => 'celso',
             'password' => 'password',
@@ -69,7 +115,16 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_password_without_min_length()
     {
-        $response = $this->postJson('/api/auth/register', [
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => 'celso',
             'email' => 'celso@karyon.com.br',
             'password' => 'pas',
@@ -81,9 +136,18 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_password_without_max_length()
     {
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
         $passMax = str_repeat("A", 256);
 
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => 'celso',
             'email' => 'celso@karyon.com.br',
             'password' => $passMax,
@@ -95,7 +159,16 @@ class RegisterUserTest extends TestCase
 
     public function test_do_not_register_password_and_confirmation_different()
     {
-        $response = $this->postJson('/api/auth/register', [
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => 'celso',
             'email' => 'celso@karyon.com.br',
             'password' => 'password',
@@ -107,7 +180,16 @@ class RegisterUserTest extends TestCase
 
     public function test_register_with_correct_data()
     {
-        $response = $this->postJson('/api/auth/register', [
+        $user = User::factory()->create();
+
+        $userLogged = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->withHeaders([
+            'Authentication' => 'Bearer ' . $userLogged['token']
+        ])->postJson('/api/auth/register', [
             'name' => 'Celso Nery',
             'email' => 'celso@karyon.com.br',
             'password' => 'password',
@@ -116,21 +198,5 @@ class RegisterUserTest extends TestCase
 
         $response->assertStatus(200)
             ->assertExactJson(['message' => 'Registro OK']);
-
-//        $response = $this->postJson('/api/auth/login', [
-//            'email' => 'celso@karyon.com.br',
-//            'password' => 'password'
-//        ]);
-//
-//        $response->dump();
-//
-//        $response->assertStatus(200)
-//            ->assertJson(['data' => [
-//                'user_id' => 1,
-//                'name' => 'Celso Nery',
-//                'email' => 'celso@karyon.com.br',
-//                ],
-//            'token' => $response['token']
-//        ]);
     }
 }
