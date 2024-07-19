@@ -18,7 +18,7 @@ spec:
 #        runAsGroup: 5000
       containers:
       - name: db-sync-api
-        image: registry.bagarote.dev.br/bagarote/db-sync-api:latest
+        image: registry.bagarote.dev.br/bagarote/db-sync/api:latest
         imagePullPolicy: IfNotPresent
         env:
           - name: APP_ENV
