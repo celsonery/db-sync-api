@@ -109,16 +109,30 @@ class RegisterUserTest extends TestCase
 
     public function test_register_with_correct_data()
     {
-        $user = User::factory()->create([
+        $response = $this->postJson('/api/auth/register', [
             'name' => 'Celso Nery',
-            'email' => 'celso@karyon.com.br'
-        ]);
-
-        $response = $this->postJson('/api/auth/login', [
             'email' => 'celso@karyon.com.br',
-            'password' => 'password'
+            'password' => 'password',
+            'password_confirmation' => 'password'
         ]);
 
-        $response->assertOk();
+        $response->assertStatus(200)
+            ->assertExactJson(['message' => 'Registro OK']);
+
+//        $response = $this->postJson('/api/auth/login', [
+//            'email' => 'celso@karyon.com.br',
+//            'password' => 'password'
+//        ]);
+//
+//        $response->dump();
+//
+//        $response->assertStatus(200)
+//            ->assertJson(['data' => [
+//                'user_id' => 1,
+//                'name' => 'Celso Nery',
+//                'email' => 'celso@karyon.com.br',
+//                ],
+//            'token' => $response['token']
+//        ]);
     }
 }
