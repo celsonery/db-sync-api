@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.1.0](https://github.com/celsonery/db-sync-api/compare/v1.0.1...v1.1.0) (2024-07-19)
+
+### Features
+
+* Adiciona .changelog ([d27604](https://github.com/celsonery/db-sync-api/commit/d27604c4f029cee76a8ebdabef36190e8a547bf3))
+* Altera dockerfile adicionando php.ini e extra.ini ([0bc68e](https://github.com/celsonery/db-sync-api/commit/0bc68edc47279c9b158779304bc9a54cfdcd9d0e))
+* Cria reports com cobertura de testes ([a8cae2](https://github.com/celsonery/db-sync-api/commit/a8cae261da2b4238b3d043c756e1fae22973991f))
+* Remove Role do projeto ([9de723](https://github.com/celsonery/db-sync-api/commit/9de723f442c652bf9d92595e7405d3694ccf4ba8))
+
+### Bug Fixes
+
+* Altera Fruitcake\Cor\HandleCors para Illuminate\Http\Middleware\HandleCors ([2176d3](https://github.com/celsonery/db-sync-api/commit/2176d3ccf5e7a9fed5aeb02b86642262b98357d7))
+
+
+---
+
 ## [1.0.0](https://github.com/celsonery/db-sync-api/compare/2daac395d4f1809379b952e2e138e12b4347cf4b...v1.0.0) (2024-07-17)
 
 ### Features

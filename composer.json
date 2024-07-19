@@ -2,9 +2,12 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "authors": [
         {
             "name": "Celso Nery",
@@ -72,8 +75,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-          "pestphp/pest-plugin": true,
-          "php-http/discovery": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",
