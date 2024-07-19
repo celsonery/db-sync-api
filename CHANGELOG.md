@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 <!--- END HEADER -->
 
+## [1.2.0](https://github.com/celsonery/db-sync-api/compare/v1.1.0...v1.2.0) (2024-07-19)
+
+### Features
+
+* Altera dockerfile e extra.ini ([bbc658](https://github.com/celsonery/db-sync-api/commit/bbc6583aecfc7b5e41178b919245bd92560ecd8f))
+* Protege rota register para somente user ja cadastrado! ([df379b](https://github.com/celsonery/db-sync-api/commit/df379b6433f2506aaff2f35d53ba182859654575))
+
+### Bug Fixes
+
+* Altera inicialização das variaveis em DatabaseController.php ([fd3a45](https://github.com/celsonery/db-sync-api/commit/fd3a45846cf5675c7576675e5b201b41410fb3d9))
+* Corrige copia do extra.ini em dockerfile ([363e44](https://github.com/celsonery/db-sync-api/commit/363e4405a1698943519d680ef9d56dccdb1b5759))
+* Corrige url da imagem docker ([eb6a1c](https://github.com/celsonery/db-sync-api/commit/eb6a1c4df5b8775b9031eafb3ebedff712d82222))
+
+
+---
+
 ## [1.1.0](https://github.com/celsonery/db-sync-api/compare/v1.0.1...v1.1.0) (2024-07-19)
 
 ### Features
