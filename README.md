@@ -20,14 +20,32 @@ php artisan key:generate
 php artisan serve
 ```
 
-## How to use
+## How to run in docker
+- Build a docker image
 ```bash
+docker build -t <image-name>:<image-version> -f docker/dockerfile
 ```
 
+- Run the docker image
+```bash
+docker run -itd --rm --name <name-of-container> -p <local-port>:8000 <image-name>
+```
+
+## To run tests run
+```bash
+php artisan test
+```
+## You can see coverage tests in html report
+```
+/reports
+```
+
+## All changes
+Please see [CHANGELOG](CHANGELOG.md) for more detail s.
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for more details.
 
 ## Support
 
