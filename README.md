@@ -5,7 +5,7 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build](https://img.shields.io/scrutinizer/build/g/celsonery/db-sync-api.svg?style=flat-square)](https://scrutinizer-ci.com/g/celsonery/db-sync-api)
 [![Quality Score](https://img.shields.io/scrutinizer/g/celsonery/db-sync-api.svg?style=flat-square)](https://scrutinizer-ci.com/g/celsonery/db-sync-api/build-status/main)
-
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue)](https://www.paypal.com/donate/?hosted_button_id=S4M2WWHM5HB2N)
 ## Installation
 
 This package available by Composer:
